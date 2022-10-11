@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% block title %} Виста {% endblock %}
+{% block content %}
+<style>
+    body {
+        font-family: sans-serif, 'Segoe UI', Tahoma, Geneva, Verdana;
+    }
+
+    .leftSide {
+        border: 1px solid gray;
+        box-shadow: 0px 0px 8px black;
+        width: 48%;
+        height: 1106px;
+        position: absolute;
+        top: 4%;
+        left: 1%;
+    }
+
+    .rightSide {
+        border: 1px solid gray;
+        box-shadow: 0px 0px 8px gray;
+        width: 48%;
+        height: 1106px;
+        position: absolute;
+        top: 4%;
+        right: 1%;
+    }
+
+    .leftBar {
+        background-color: dodgerblue;
+        border-bottom: 1px solid gray;
+        height: 42px;
+    }
+
+    .rightBar {
+        background-color: white;
+        border-bottom: 1px solid gray;
+        height: 42px;
+    }
+
+    .leftTitle {
+        color: white;
+        margin: 0;
+        padding-left: 2%;
+        padding-top: 2%;
+    }
+
+    .tab {
+        border-bottom: 3px solid gray;
+        width: min-content;
+        height: 42px;
+        float: left;
+    }
+
+    .tab:hover {
+        border-bottom: 3px solid darkgray;
+    }
+
+    .tab:active {
+        border-bottom: 3px solid dodgerblue;
+    }
+
+    .tabText {
+        margin: 0;
+        padding: 12px;
+        color: black;
+        height: 16px;
+    }
+
+    .infoPanel {
+        margin-left: 10px;
+        padding-top: 10px;
+        height: 32px;
+    }
+
+
+    .infoLeft {
+        width: 15%;
+    }
+
+    .infoRight {
+        width: 70%;
+        height: 20px;
+        margin-left: 15%;
+        margin-top: -33px;
+        border-bottom: 1px solid gray;
+    }
+
+    #quittingForms {
+        margin-top: -1026px;
+    }
+
+    .staticInfo {
+        height: 32px;
+        margin: 0;
+        padding: 0;
+        padding-bottom: 5px;
+    }
+
+    .formEntry {
+        height: 32px;
+        margin: 0;
+        padding-bottom: 5px;
+        border-top: 1px solid gray;
+    }
+
+    .formEntry:hover {
+        background-color: darkgray;
+    }
+
+    .formEntry:active {}
+
+    .num {
+        position: absolute;
+        margin-left: 5%;
+    }
+
+    .name {
+        position: absolute;
+        margin-left: 25%;
+    }
+
+    .other {
+        position: absolute;
+        margin-left: 75%;
+    }
+</style>
+<div>
+    <div class="leftSide">
+        <div class="leftBar">
+            <h2 class="leftTitle">Информация о пациенте</h2>
+            <div class="infoPanel">
+                <h3 class="infoLeft">ФИО</h3>
+                <h3 class="infoRight" id="name"></h3>
+            </div>
+            <div class="infoPanel">
+                <h3 class="infoLeft">Возраст</h3>
+                <h3 class="infoRight" id="age"></h3>
+            </div>
+            <div class="infoPanel">
+                <h3 class="infoLeft">Диагноз</h3>
+                <h3 class="infoRight" id="diagnose"></h3>
+            </div>
+        </div>
+    </div>
+    <div class="rightSide">
+        <div class="rightBar">
+            <a onclick="switchTo('present')">
+                <div class="tab" id="leftTab">
+                    <h2 class="tabText">ПРИСУТСТВУЮТ({{ pCount }})</h2>
+                </div>
+            </a>
+            <a onclick="switchTo('quitting')">
+                <div class="tab" id="rightTab">
+                    <h2 class="tabText">ВЫБЫВШИЕ({{ qCount }})
+                    </h2>
+                </div>
+            </a>
+        </div>
+        <div class="staticInfo">
+            <h3 class="num">№ ИБ</h3>
+            <h3 class="name">ФИО</h3>
+            <h3 class="other">{{ otherstat }}</h3>
+        </div>
+        <div class="forms" id="presentForms" style="visibility: visible">{{ pForms }}</div>
+        <div class="forms" id="quittingForms" style="visibility: hidden">{{ qForms }}</div>
+    </div>
+</div>
+<div style="height: 1150px"></div>
+
+<script>
+    `{% block scripts %}`
+    window.onload = function () {
+        showInfo(0)
+        switchTo()
+    }
+    function switchTo(page) {
+        let a = page == "quitting" ? "Причина выбытия" : "Палата"
+        document.getElementsByClassName("staticInfo").item(0).children[2].textContent = a;
+        if (page == "quitting") {
+            document.getElementById("presentForms").attributes.style.value = "visibility: hidden"
+            document.getElementById("quittingForms").attributes.style.value = "visibility: visible"
+            document.getElementById("leftTab").style["border-bottom"] = ""
+            document.getElementById("rightTab").style["border-bottom"] = "3px solid blue"
+
+        } else {
+            document.getElementById("presentForms").attributes.style.value = "visibility: visible"
+            document.getElementById("quittingForms").attributes.style.value = "visibility: hidden"
+            document.getElementById("leftTab").style["border-bottom"] = "3px solid blue"
+            document.getElementById("rightTab").style["border-bottom"] = ""
+        }
+        loadList(page)
+    }
+    function showInfo(id) {
+        let a = document.getElementById("name")
+        let b = document.getElementById("age")
+        let c = document.getElementById("diagnose")
+        let target = document.getElementById(id).children
+        a.textContent = target[1].textContent
+        let d = target[3].attributes
+        b.textContent = d[1].textContent
+        c.textContent = d[2].textContent
+    }
+    `{% endblock %}`
+</script>
+{% endblock %}

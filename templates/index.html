@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Выберите раздел{% endblock %}
+{% block content %}
+<h1 style="text-align: center">Выберите раздел</h1>
+<div style="height: 50px; text-align: center; font-size: 32px">
+    <db><button onclick="loadList('present')">Присутствуют</button></db>
+    <db><button onclick="loadList('quitting')">Выбывшие</button></db>
+</div>
+{% endblock %}
